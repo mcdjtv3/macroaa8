@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz : Démarche Marketing & Définition des Marchés</title>
+    <style>
+        body {
+            font-family: 'Mayan', sans-serif;
+            margin: 0;
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #333;
+            text-align: center;
+        }
+        .quiz-container, .summary {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+            background-image: url('images/back.jpg.webp');
+            background-size: cover;
+            background-position: center;
+        }
+        .question {
+            font-size: 18px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #000;
+        }
+        .choices {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+            margin-left: 20%;
+        }
+        .choices li {
+            margin: 8px 0;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            background-color: #FF0000;
+            color: white;
+            border-radius: 10px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #CC0000;
+        }
+        .summary {
+            display: none;
+        }
+        .summary ul {
+            list-style: none;
+            padding: 0;
+        }
+        .summary li {
+            text-align: left;
+            margin-left: 20%;
+            margin-bottom: 10px;
+        }
+        .correct {
+            color: green;
+            font-weight: bold;
+        }
+        .incorrect {
+            color: red;
+            font-weight: bold;
+        }
+        .score {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        @media (max-width: 768px) {
+            .quiz-container, .summary {
+                max-width: 90%;
+                margin: 20px auto;
+                padding: 15px;
+                border-radius: 10px;
+            }
+            button {
+                font-size: 14px;
+                padding: 8px 16px;
+            }
+        }
+        @media (max-width: 480px) {
+            .quiz-container, .summary {
+                padding: 10px;
+                margin: 10px;
+                border-radius: 10px;
+            }
+            .question {
+                font-size: 16px;
+            }
+            button {
+                font-size: 12px;
+                padding: 6px 12px;
+                border-radius: 10px;
+            }
+        }
+        @media (min-width: 1024px) {
+            .quiz-container, .summary {
+                max-width: 800px;
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="quiz-container" id="quiz-container">
+    <h2>QCM ENTRAINEMENT - The Labor Market and Wage Setting</h2>
+    <div id="question-container">
+        <!-- Les questions seront affichées ici dynamiquement -->
+    </div>
+    <button id="next-button" onclick="nextQuestion()">Suivant</button>
+</div>
+
+<div class="summary" id="summary">
+    <h3>Récapitulatif</h3>
+    <ul id="summary-list">
+        <!-- Le récapitulatif des réponses sera affiché ici -->
+    </ul>
+    <div class="score" id="score"></div>
+    <button onclick="restartQuiz()">Recommencer</button>
+</div>
+
+<script>
+    const quizData = [
+        { question: "What is the unemployment rate?", choices: ["The ratio of the unemployed to the total population", "The ratio of the unemployed to the labor force", "The ratio of the employed to the working-age population", "The number of people unemployed divided by the total population"], correct: 1 },
+        { question: "Which of the following best describes the reservation wage?", choices: ["The minimum wage a firm is legally allowed to pay", "The level of wage at which workers are indifferent between working and being unemployed", "The wage rate set by unions during collective bargaining", "The average wage across the economy"], correct: 1 },
+        { question: "In the labor market, bargaining power depends on:", choices: ["Only the worker’s skill level", "Only the unemployment rate", "The worker’s skill level and labor market conditions", "The number of firms in the market"], correct: 2 },
+        { question: "What happens to bargaining power when unemployment is high?", choices: ["Bargaining power increases because more workers are available", "Bargaining power decreases because workers are easily replaced", "Bargaining power is unaffected", "Bargaining power depends solely on the number of skilled workers"], correct: 1 },
+        { question: "In price determination, what does the markup represent?", choices: ["The difference between the price of a good and its marginal cost", "The wage paid to workers above the minimum wage", "The tax imposed by the government on labor", "The profit margin in a perfectly competitive market"], correct: 0 },
+        { question: "What happens to the natural rate of unemployment when unemployment benefits increase?", choices: ["It decreases because workers accept jobs faster", "It remains unchanged because benefits are unrelated to the unemployment rate", "It increases because workers have higher bargaining power and are less inclined to accept lower-paying jobs", "It increases because the economy grows faster"], correct: 2 },
+        { question: "In a labor market with higher markups, what is the likely impact on the real wage?", choices: ["The real wage increases as firms pass on their costs to workers", "The real wage decreases because firms pay a lower wage relative to the price level", "The real wage remains unchanged because inflation offsets the markup", "The real wage fluctuates randomly based on market conditions"], correct: 1 },
+        { question: "How does an increase in unemployment benefits affect the wage-setting curve?", choices: ["It shifts the wage-setting curve upward", "It shifts the wage-setting curve downward", "It makes the wage-setting curve vertical", "It flattens the wage-setting curve"], correct: 0 },
+        { question: "What does the price-setting curve represent in the labor market?", choices: ["The relationship between wages and prices under perfect competition", "The real wage firms are willing to pay based on the level of competition and markups", "The government-mandated minimum wage for all industries", "The wage level set by unions during wage negotiations"], correct: 1 },
+        { question: "How does an increase in the markup affect the natural rate of unemployment?", choices: ["The natural rate of unemployment decreases", "The natural rate of unemployment increases", "The natural rate of unemployment remains constant", "The natural rate of unemployment fluctuates unpredictably"], correct: 1 },
+        { question: "In the wage-setting and price-setting framework, what happens at the equilibrium point?", choices: ["The real wage paid by firms equals the real wage workers are willing to accept", "The real wage paid by firms exceeds the real wage workers accept", "The unemployment rate is zero", "Firms and workers both adjust their wages continuously"], correct: 0 },
+        { question: "Which of the following is not a factor that shifts the wage-setting curve?", choices: ["Unemployment benefits", "Government-mandated minimum wages", "An increase in the markup by firms", "Changes in labor productivity"], correct: 2 },
+        { question: "What happens when the labor force increases but the natural rate of unemployment remains the same?", choices: ["Employment automatically increases", "The participation rate decreases", "The unemployment rate increases", "The unemployment rate remains constant"], correct: 3 },
+        { question: "Which of the following best describes the natural rate of output?", choices: ["The output level when the economy is growing at its potential", "The output level when unemployment is zero", "The output level when the economy experiences inflation", "The output level determined by the natural rate of unemployment"], correct: 3 },
+        { question: "How does an increase in labor productivity affect the price-setting curve?", choices: ["The price-setting curve shifts upward", "The price-setting curve shifts downward", "The price-setting curve becomes vertical", "The price-setting curve remains unchanged"], correct: 1 }
+    ];
+
+    let currentQuestionIndex = 0;
+    let selectedAnswers = [];
+
+    function loadQuestion() {
+        const container = document.getElementById('question-container');
+        container.innerHTML = '';
+
+        const questionData = quizData[currentQuestionIndex];
+        const questionElem = document.createElement('div');
+        questionElem.className = 'question';
+        questionElem.textContent = questionData.question;
+
+        const choicesElem = document.createElement('ul');
+        choicesElem.className = 'choices';
+
+        questionData.choices.forEach((choice, index) => {
+            const choiceElem = document.createElement('li');
+            const choiceInput = document.createElement('input');
+            choiceInput.type = 'radio';
+            choiceInput.name = 'choice';
+            choiceInput.value = index;
+            choiceInput.id = `choice${index}`;
+            
+            const choiceLabel = document.createElement('label');
+            choiceLabel.htmlFor = `choice${index}`;
+            choiceLabel.textContent = choice;
+
+            choiceElem.appendChild(choiceInput);
+            choiceElem.appendChild(choiceLabel);
+            choicesElem.appendChild(choiceElem);
+        });
+
+        container.appendChild(questionElem);
+        container.appendChild(choicesElem);
+    }
+
+    function nextQuestion() {
+        const selectedChoice = document.querySelector('input[name="choice"]:checked');
+        if (!selectedChoice) {
+            alert("Veuillez sélectionner une réponse !");
+            return;
+        }
+
+        selectedAnswers.push(parseInt(selectedChoice.value));
+        currentQuestionIndex++;
+
+        if (currentQuestionIndex < quizData.length) {
+            loadQuestion();
+        } else {
+            showSummary();
+        }
+    }
+
+    function showSummary() {
+        document.getElementById('quiz-container').style.display = 'none';
+        const summary = document.getElementById('summary');
+        summary.style.display = 'block';
+
+        const summaryList = document.getElementById('summary-list');
+        summaryList.innerHTML = '';
+
+        let correctAnswers = 0;
+
+        quizData.forEach((q, index) => {
+            const summaryItem = document.createElement('li');
+            summaryItem.innerHTML = `
+                <strong>${q.question}</strong><br>
+                <div style="text-align: left; margin-left: 20%;">
+                    Votre réponse: ${q.choices[selectedAnswers[index]]} - 
+                    ${selectedAnswers[index] === q.correct ? '<span class="correct">Correct</span>' : '<span class="incorrect">Incorrect</span>'}<br>
+                    Bonne réponse: ${q.choices[q.correct]}
+                </div>
+            `;
+            summaryList.appendChild(summaryItem);
+            if (selectedAnswers[index] === q.correct) {
+                correctAnswers++;
+            }
+        });
+
+        document.getElementById('score').textContent = `Score: ${correctAnswers} / ${quizData.length}`;
+    }
+
+    function restartQuiz() {
+        currentQuestionIndex = 0;
+        selectedAnswers = [];
+        document.getElementById('summary').style.display = 'none';
+        document.getElementById('quiz-container').style.display = 'block';
+        loadQuestion();
+    }
+
+    loadQuestion();
+</script>
+
+</body>
+
+</html>
